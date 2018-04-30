@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-    https://www.themoviedb.org
-    -->
+
+    <!-- TODO add https://www.themoviedb.org Api Key -->
     <string name="TMDB_API_KEY">INSERT KEY</string>
 
 </resources>

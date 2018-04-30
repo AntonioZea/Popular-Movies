@@ -21,7 +21,10 @@ import android.util.Log;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class TMDBNetworkTools {
+public class TMDBNetworkTools {
+
+    public final static String ARG_POPULAR_LIST = "arg_popular_list";
+    public final static String ARG_TOP_RATED_LIST = "arg_top_rated_list";
 
     private final static String TMDB_POPULAR_LIST_BASE_URL =
             "http://api.themoviedb.org/3/movie/popular";
@@ -36,7 +39,7 @@ class TMDBNetworkTools {
     // Available sizes: "w92", "w154", "w185", "w342", "w500", "w780", "original".
     private final static String TMDB_IMAGE_SIZE = "w185";
 
-    static URL getPopularListUrl(String apiKey) {
+    public static URL getPopularListUrl(String apiKey) {
 
         Uri uri = Uri.parse(TMDB_POPULAR_LIST_BASE_URL).buildUpon()
                 .appendQueryParameter(TMDB_PARAM_API_KEY, apiKey).build();
@@ -44,7 +47,7 @@ class TMDBNetworkTools {
         return buildUrl(uri);
     }
 
-    static URL getTopRatedListUrl(String apiKey) {
+    public static URL getTopRatedListUrl(String apiKey) {
 
         Uri uri = Uri.parse(TMDB_TOP_RATED_LIST_BASE_URL).buildUpon()
                 .appendQueryParameter(TMDB_PARAM_API_KEY, apiKey).build();
