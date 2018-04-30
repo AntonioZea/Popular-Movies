@@ -6,5 +6,8 @@
     <string name="popular_movies">Popular Movies</string>
     <string name="top_rated_movies">Top Rated Movies</string>
     <string name="your_favorites">Your Favorites</string>
+    <string name="media_details">Media Details</string>
+
+    <string name="error_loading_data">Error Loading Data</string>
 
 </resources>

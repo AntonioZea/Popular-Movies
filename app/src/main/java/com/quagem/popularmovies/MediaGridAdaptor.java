@@ -1,27 +1,21 @@
 package com.quagem.popularmovies;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MovieListAdaptor extends BaseAdapter {
-
-    public static final String TAG = MovieListAdaptor.class.getSimpleName();
+public class MediaGridAdaptor extends BaseAdapter {
 
     private Activity activity;
-    private List<MovieDataType> listData;
+    private List<MediaDataType> listData;
 
-    public MovieListAdaptor(Activity activity, List<MovieDataType> listData) {
+    public MediaGridAdaptor(Activity activity, List<MediaDataType> listData) {
         this.activity = activity;
         this.listData = listData;
     }
@@ -48,7 +42,7 @@ public class MovieListAdaptor extends BaseAdapter {
 
         if (view == null)
             view = activity.getLayoutInflater().inflate(
-                    R.layout.list_item_movie, viewGroup, false);
+                    R.layout.grid_item, viewGroup, false);
 
         imageView = view.findViewById(R.id.iv_movie_poster);
 

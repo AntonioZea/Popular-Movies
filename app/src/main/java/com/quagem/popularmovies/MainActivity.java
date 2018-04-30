@@ -19,14 +19,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_container);
 
         fragmentManager = getSupportFragmentManager();
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            // TODO: 4/30/2018 set getSupportActionBar().setIcon();
-        }
 
         if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -54,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             default: fragment = new PopularMoviesFragment(); break;
         }
 
+        fragmentTransaction.setCustomAnimations(android.R.anim.fade_in , android.R.anim.fade_out);
         fragmentTransaction.replace(R.id.container, fragment).commit();
 
         return true;

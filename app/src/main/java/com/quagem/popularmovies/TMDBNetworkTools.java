@@ -23,8 +23,8 @@ import java.net.URL;
 
 public class TMDBNetworkTools {
 
-    public final static String ARG_POPULAR_LIST = "arg_popular_list";
-    public final static String ARG_TOP_RATED_LIST = "arg_top_rated_list";
+    private final static String TMDB_MEDIA_DETAIL_BASE_URL =
+            "http://api.themoviedb.org/3/movie/";
 
     private final static String TMDB_POPULAR_LIST_BASE_URL =
             "http://api.themoviedb.org/3/movie/popular";
@@ -50,6 +50,15 @@ public class TMDBNetworkTools {
     public static URL getTopRatedListUrl(String apiKey) {
 
         Uri uri = Uri.parse(TMDB_TOP_RATED_LIST_BASE_URL).buildUpon()
+                .appendQueryParameter(TMDB_PARAM_API_KEY, apiKey).build();
+
+        return buildUrl(uri);
+    }
+
+    public static URL getMediaDetailUrl(String apiKey, String mediaId) {
+
+        Uri uri = Uri.parse(TMDB_MEDIA_DETAIL_BASE_URL).buildUpon()
+                .appendPath(mediaId)
                 .appendQueryParameter(TMDB_PARAM_API_KEY, apiKey).build();
 
         return buildUrl(uri);

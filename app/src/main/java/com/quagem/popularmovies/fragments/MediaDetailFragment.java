@@ -1,24 +1,19 @@
 package com.quagem.popularmovies.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import android.widget.Toast;
 
 import com.quagem.popularmovies.MediaDataType;
 import com.quagem.popularmovies.MediaDetailActivity;
-import com.quagem.popularmovies.MediaGridAdaptor;
 import com.quagem.popularmovies.R;
 import com.quagem.popularmovies.TMDBNetworkTools;
 import com.quagem.popularmovies.UrlLoader;
@@ -27,59 +22,32 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class PopularMoviesFragment extends Fragment implements
+public class MediaDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<String> {
 
-    public static final String TAG = PopularMoviesFragment.class.getSimpleName();
+    public static final String TAG = TopRatedMoviesFragment.class.getSimpleName();
 
-    private final static int ULR_LOADER_ID = 1;
+    private final static int ULR_LOADER_ID = 3;
 
     private static final String JSON_RESULTS = "results";
     private static final String JSON_MOVIE_ID = "id";
     private static final String JSON_POSTER_PATH = "poster_path";
 
-    private List<MediaDataType> listData;
-    private MediaGridAdaptor mediaGridAdaptor;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate");
         setRetainInstance(true);
+
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
 
         View rootView;
-
-        rootView = inflater.inflate(R.layout.grid_view, container, false);
-
-        listData = new ArrayList<>();
-        mediaGridAdaptor = new MediaGridAdaptor(getActivity(),listData);
-
-        // GridVew.
-        GridView gridView = rootView.findViewById(R.id.gridview);
-        gridView.setAdapter(mediaGridAdaptor);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-
-                if (getContext() != null) {
-
-                    Intent intent = new Intent(getContext(), MediaDetailActivity.class);
-                    intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, Long.toString(id));
-
-                    getContext().startActivity(intent);
-                }
-            }
-        });
+        rootView = inflater.inflate(R.layout.movie_detail, container, false);
 
         return rootView;
     }
@@ -87,12 +55,8 @@ public class PopularMoviesFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        Log.i("SIS", savedInstanceState == null ? "TRUE" : "False");
         if (getActivity() != null) {
-
-            ActionBar actionBar;
-            actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null) actionBar.setSubtitle(R.string.popular_movies);
 
             getActivity().getSupportLoaderManager().
                     initLoader(ULR_LOADER_ID, null, this);
@@ -103,8 +67,12 @@ public class PopularMoviesFragment extends Fragment implements
     @Override
     @SuppressWarnings("ConstantConditions")
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new UrlLoader(getContext(), TMDBNetworkTools.getPopularListUrl(
-                getResources().getString(R.string.TMDB_API_KEY)));
+
+        String mediaId = getActivity().getIntent().getStringExtra(MediaDetailActivity.ARG_MEDIA_ID);
+        if (mediaId == null) errorLoadingData();
+
+        return new UrlLoader(getContext(), TMDBNetworkTools.getMediaDetailUrl(
+                getResources().getString(R.string.TMDB_API_KEY), mediaId));
 
     }
 
@@ -113,8 +81,6 @@ public class PopularMoviesFragment extends Fragment implements
         Log.i(TAG, "onLoadFinished: " + data);
 
         if (data != null) {
-
-            listData.clear();
 
             try {
 
@@ -132,10 +98,9 @@ public class PopularMoviesFragment extends Fragment implements
                     mediaDataType.setId(movie.getLong(JSON_MOVIE_ID));
                     mediaDataType.setPosterPath(movie.getString(JSON_POSTER_PATH));
 
-                    listData.add(mediaDataType);
+
                 }
 
-                mediaGridAdaptor.notifyDataSetChanged();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -146,5 +111,13 @@ public class PopularMoviesFragment extends Fragment implements
     @Override
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
+    }
+
+    private void errorLoadingData(){
+
+        Toast.makeText(getContext(),
+                getResources().getString(R.string.error_loading_data), Toast.LENGTH_LONG).show();
+
+        if (getActivity() != null) getActivity().finish();
     }
 }

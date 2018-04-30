@@ -1,5 +1,6 @@
 package com.quagem.popularmovies.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,10 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import com.quagem.popularmovies.MovieDataType;
-import com.quagem.popularmovies.MovieListAdaptor;
+import com.quagem.popularmovies.MediaDataType;
+import com.quagem.popularmovies.MediaDetailActivity;
+import com.quagem.popularmovies.MediaGridAdaptor;
 import com.quagem.popularmovies.R;
 import com.quagem.popularmovies.TMDBNetworkTools;
 import com.quagem.popularmovies.UrlLoader;
@@ -40,8 +41,8 @@ public class TopRatedMoviesFragment extends Fragment implements
     private static final String JSON_MOVIE_ID = "id";
     private static final String JSON_POSTER_PATH = "poster_path";
 
-    private List<MovieDataType> listData;
-    private MovieListAdaptor movieListAdaptor;
+    private List<MediaDataType> listData;
+    private MediaGridAdaptor mediaGridAdaptor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,16 +61,23 @@ public class TopRatedMoviesFragment extends Fragment implements
         rootView = inflater.inflate(R.layout.grid_view, container, false);
 
         listData = new ArrayList<>();
-        movieListAdaptor = new MovieListAdaptor(getActivity(),listData);
+        mediaGridAdaptor = new MediaGridAdaptor(getActivity(),listData);
 
         // GridVew.
         GridView gridView = rootView.findViewById(R.id.gridview);
-        gridView.setAdapter(movieListAdaptor);
+        gridView.setAdapter(mediaGridAdaptor);
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getActivity(), "id: " + listData.get(position).getId(),
-                        Toast.LENGTH_SHORT).show();
+
+                if (getContext() != null) {
+
+                    Intent intent = new Intent(getContext(), MediaDetailActivity.class);
+                    intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, Long.toString(id));
+
+                    getContext().startActivity(intent);
+                }
             }
         });
 
@@ -113,21 +121,21 @@ public class TopRatedMoviesFragment extends Fragment implements
                 final JSONObject results = new JSONObject(data);
                 final JSONArray movies = results.getJSONArray(JSON_RESULTS);
 
-                MovieDataType movieDataType;
+                MediaDataType mediaDataType;
 
                 for (int i = 0; i < movies.length(); i++) {
 
                     JSONObject movie = movies.getJSONObject(i);
 
-                    movieDataType = new MovieDataType();
+                    mediaDataType = new MediaDataType();
 
-                    movieDataType.setId(movie.getLong(JSON_MOVIE_ID));
-                    movieDataType.setPosterPath(movie.getString(JSON_POSTER_PATH));
+                    mediaDataType.setId(movie.getLong(JSON_MOVIE_ID));
+                    mediaDataType.setPosterPath(movie.getString(JSON_POSTER_PATH));
 
-                    listData.add(movieDataType);
+                    listData.add(mediaDataType);
                 }
 
-                movieListAdaptor.notifyDataSetChanged();
+                mediaGridAdaptor.notifyDataSetChanged();
 
             } catch (JSONException e) {
                 e.printStackTrace();

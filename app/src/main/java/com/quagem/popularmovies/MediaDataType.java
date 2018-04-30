@@ -8,7 +8,7 @@ import java.util.List;
  *
  */
 
-public class MovieDataType {
+public class MediaDataType {
 
     private long voteCount;
     private long id;
@@ -25,7 +25,7 @@ public class MovieDataType {
     private String overview;
     private String releaseDate;
 
-    public MovieDataType() {
+    public MediaDataType() {
         genreIds = new ArrayList<>();
     }
 
