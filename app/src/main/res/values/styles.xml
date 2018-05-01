@@ -28,8 +28,7 @@
     <style name="media_detail_title">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">32sp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
@@ -37,7 +36,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginRight">4dp</item>
         <item name="android:background">@drawable/release_data_bkg</item>
         <item name="android:visibility">gone</item>
         <item name="android:textColor">@android:color/white</item>
@@ -56,8 +55,10 @@
     <style name="media_detail_genres">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="media_detail_overview">
