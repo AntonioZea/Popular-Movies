@@ -7,6 +7,8 @@
     <string name="your_favorites">Your Favorites</string>
     <string name="media_details">Media Details</string>
     <string name="overview">Overview</string>
+    <string name="based_on">Based on</string>
+    <string name="critics">Critics</string>
 
     <string name="error_loading_data">Error Loading Data</string>
 

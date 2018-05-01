@@ -38,12 +38,17 @@ public class MediaDetailFragment extends Fragment implements
     private static final String JSON_GENRES_NAME = "name";
     private static final String JSON_OVERVIEW = "overview";
     private static final String JSON_RELEASE_DATE = "release_date";
+    private static final String JSON_VOTE_AVERAGE = "vote_average";
+    private static final String JSON_VOTE_COUNT = "vote_count";
+
 
     private ImageView backdrop;
     private TextView title;
     private TextView genres;
     private TextView overview;
     private TextView releaseDate;
+    private TextView averageRating;
+    private TextView basedOn;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +70,8 @@ public class MediaDetailFragment extends Fragment implements
         genres = rootView.findViewById(R.id.tv_genres);
         overview = rootView.findViewById(R.id.tv_overview);
         releaseDate = rootView.findViewById(R.id.tv_release_date);
+        averageRating = rootView.findViewById(R.id.tv_average_rating);
+        basedOn = rootView.findViewById(R.id.tv_based_on);
 
         return rootView;
     }
@@ -136,6 +143,24 @@ public class MediaDetailFragment extends Fragment implements
                     genres.setText(stringBuilder);
 
                 } else genres.setVisibility(View.GONE);
+
+                if (!results.getString(JSON_VOTE_AVERAGE).isEmpty()) {
+
+                    averageRating.setText(results.getString(JSON_VOTE_AVERAGE));
+                    averageRating.setVisibility(View.VISIBLE);
+
+                    stringBuilder.setLength(0);
+                    stringBuilder.append(getResources().getString(R.string.based_on));
+                    stringBuilder.append(" ");
+                    stringBuilder.append(results.getString(JSON_VOTE_COUNT));
+                    stringBuilder.append(" ");
+                    stringBuilder.append(getResources().getString(R.string.critics));
+                    stringBuilder.append(".");
+
+                    basedOn.setText(stringBuilder.toString().toUpperCase());
+                    basedOn.setVisibility(View.VISIBLE);
+                }
+
 
                 overview.setText(results.getString(JSON_OVERVIEW));
 

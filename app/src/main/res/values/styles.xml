@@ -43,6 +43,16 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="media_detail_rating">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:background">@drawable/average_rating_bkg</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="media_detail_genres">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
