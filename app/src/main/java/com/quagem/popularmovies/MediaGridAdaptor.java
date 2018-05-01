@@ -38,16 +38,16 @@ public class MediaGridAdaptor extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        ImageView imageView;
-
         if (view == null)
             view = activity.getLayoutInflater().inflate(
                     R.layout.grid_item, viewGroup, false);
 
-        imageView = view.findViewById(R.id.iv_movie_poster);
+        ImageView imageView = view.findViewById(R.id.iv_movie_poster);
 
         Picasso.with(activity)
-                .load(TMDBNetworkTools.getPosterUri(listData.get(i).getPosterPath()))
+                .load(TMDBNetworkTools.getImageUri(
+                        listData.get(i).getPosterPath(),
+                        TMDBNetworkTools.TMDB_IMAGE_W185))
                 .placeholder(R.drawable.ic_launcher_background) // TODO: 4/27/18
                 .error(R.drawable.ic_launcher_background) // TODO: 4/27/18
                 .into(imageView);

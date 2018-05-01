@@ -2,12 +2,17 @@
 
     <string name="app_name">Screen Trends</string>
 
-    <string name="movie_poster">Movie Poster</string>
     <string name="popular_movies">Popular Movies</string>
     <string name="top_rated_movies">Top Rated Movies</string>
     <string name="your_favorites">Your Favorites</string>
     <string name="media_details">Media Details</string>
+    <string name="overview">Overview</string>
 
     <string name="error_loading_data">Error Loading Data</string>
+
+    <!-- Content Descriptions -->
+    <string name="media_poster">Media Poster</string>
+    <string name="backdrop_image">Backdrop Image</string>
+
 
 </resources>

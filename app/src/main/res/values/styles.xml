@@ -19,15 +19,42 @@
     <style name="grid_view_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:columnWidth">@dimen/poster_width</item>
+        <item name="android:columnWidth">@dimen/poster_list_width</item>
         <item name="android:numColumns">auto_fit</item>
         <item name="android:stretchMode">columnWidth</item>
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="media_detail_title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 
-    android:numColumns="auto_fit"
-    android:stretchMode="columnWidth"
-    android:gravity="center"
+    <style name="media_detail_date">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:background">@drawable/release_data_bkg</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="media_detail_genres">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="media_detail_overview">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:padding">8dp</item>
+    </style>
 
 </resources>

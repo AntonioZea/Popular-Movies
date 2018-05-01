@@ -16,7 +16,6 @@
 package com.quagem.popularmovies;
 
 import android.net.Uri;
-import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,8 +35,13 @@ public class TMDBNetworkTools {
 
     private final static String TMDB_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
 
-    // Available sizes: "w92", "w154", "w185", "w342", "w500", "w780", "original".
-    private final static String TMDB_IMAGE_SIZE = "w185";
+    public final static String TMDB_IMAGE_W92  = "w92";
+    public final static String TMDB_IMAGE_W154 = "w154";
+    public final static String TMDB_IMAGE_W185 = "w185";
+    public final static String TMDB_IMAGE_W342 = "w342";
+    public final static String TMDB_IMAGE_W500 = "w500";
+    public final static String TMDB_IMAGE_W780 = "w780";
+    public final static String TMDB_IMAGE_ORIGINAL = "original";
 
     public static URL getPopularListUrl(String apiKey) {
 
@@ -64,10 +68,10 @@ public class TMDBNetworkTools {
         return buildUrl(uri);
     }
 
-    static Uri getPosterUri(String posterPath) {
+    public static Uri getImageUri(String imagePath, String size) {
         return Uri.parse(TMDB_IMAGE_BASE_URL).buildUpon()
-                .appendPath(TMDB_IMAGE_SIZE)
-                .appendEncodedPath(posterPath).build();
+                .appendPath(size)
+                .appendEncodedPath(imagePath).build();
     }
 
     private static URL buildUrl(Uri uri) {

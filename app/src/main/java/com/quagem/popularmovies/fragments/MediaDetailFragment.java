@@ -10,13 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quagem.popularmovies.MediaDataType;
 import com.quagem.popularmovies.MediaDetailActivity;
 import com.quagem.popularmovies.R;
 import com.quagem.popularmovies.TMDBNetworkTools;
 import com.quagem.popularmovies.UrlLoader;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,13 +27,23 @@ import org.json.JSONObject;
 public class MediaDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<String> {
 
-    public static final String TAG = TopRatedMoviesFragment.class.getSimpleName();
+    public static final String TAG = MediaDetailFragment.class.getSimpleName();
 
     private final static int ULR_LOADER_ID = 3;
 
-    private static final String JSON_RESULTS = "results";
     private static final String JSON_MOVIE_ID = "id";
-    private static final String JSON_POSTER_PATH = "poster_path";
+    private static final String JSON_BACKDROP_PATH = "backdrop_path";
+    private static final String JSON_ORIGINAL_TITLE = "original_title";
+    private static final String JSON_GENRES = "genres";
+    private static final String JSON_GENRES_NAME = "name";
+    private static final String JSON_OVERVIEW = "overview";
+    private static final String JSON_RELEASE_DATE = "release_date";
+
+    private ImageView backdrop;
+    private TextView title;
+    private TextView genres;
+    private TextView overview;
+    private TextView releaseDate;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,8 +58,13 @@ public class MediaDetailFragment extends Fragment implements
                              @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
 
-        View rootView;
-        rootView = inflater.inflate(R.layout.movie_detail, container, false);
+        View rootView = inflater.inflate(R.layout.movie_detail, container, false);
+
+        backdrop = rootView.findViewById(R.id.iv_backdrop);
+        title = rootView.findViewById(R.id.tv_title);
+        genres = rootView.findViewById(R.id.tv_genres);
+        overview = rootView.findViewById(R.id.tv_overview);
+        releaseDate = rootView.findViewById(R.id.tv_release_date);
 
         return rootView;
     }
@@ -85,22 +102,42 @@ public class MediaDetailFragment extends Fragment implements
             try {
 
                 final JSONObject results = new JSONObject(data);
-                final JSONArray movies = results.getJSONArray(JSON_RESULTS);
+                final JSONArray genresList = results.getJSONArray(JSON_GENRES);
 
-                MediaDataType mediaDataType;
+                Picasso.with(getContext())
+                        .load(TMDBNetworkTools.getImageUri(
+                                results.getString(JSON_BACKDROP_PATH),
+                                TMDBNetworkTools.TMDB_IMAGE_W780))
+                        .placeholder(R.drawable.ic_launcher_background) // TODO: 4/27/18
+                        .error(R.drawable.ic_launcher_background) // TODO: 4/27/18
+                        .into(backdrop);
 
-                for (int i = 0; i < movies.length(); i++) {
+                title.setText(results.getString(JSON_ORIGINAL_TITLE));
 
-                    JSONObject movie = movies.getJSONObject(i);
-
-                    mediaDataType = new MediaDataType();
-
-                    mediaDataType.setId(movie.getLong(JSON_MOVIE_ID));
-                    mediaDataType.setPosterPath(movie.getString(JSON_POSTER_PATH));
-
-
+                // Because the date uses a brite background it looks ugly when empty.
+                if (!results.getString(JSON_RELEASE_DATE).isEmpty()) {
+                    releaseDate.setText(results.getString(JSON_RELEASE_DATE));
+                    releaseDate.setVisibility(View.VISIBLE);
                 }
 
+                StringBuilder stringBuilder = new StringBuilder();
+
+                // Genres
+                if (genresList.length() > 0) {
+
+                    for (int i = 0; i < genresList.length(); i++) {
+
+                        if (genresList.length() > 0 && i > 0) stringBuilder.append(", ");
+
+                        stringBuilder.append(
+                                genresList.getJSONObject(i).getString(JSON_GENRES_NAME));
+                    }
+                    stringBuilder.append(".");
+                    genres.setText(stringBuilder);
+
+                } else genres.setVisibility(View.GONE);
+
+                overview.setText(results.getString(JSON_OVERVIEW));
 
             } catch (JSONException e) {
                 e.printStackTrace();
