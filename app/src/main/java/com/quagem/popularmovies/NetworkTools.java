@@ -15,12 +15,15 @@
  */
 package com.quagem.popularmovies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class TMDBNetworkTools {
+public class NetworkTools {
 
     private final static String TMDB_MEDIA_DETAIL_BASE_URL =
             "http://api.themoviedb.org/3/movie/";
@@ -42,6 +45,20 @@ public class TMDBNetworkTools {
     public final static String TMDB_IMAGE_W500 = "w500";
     public final static String TMDB_IMAGE_W780 = "w780";
     public final static String TMDB_IMAGE_ORIGINAL = "original";
+
+    public static boolean isConnected(Context context) {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+        }
+
+        return false;
+    }
 
     public static URL getPopularListUrl(String apiKey) {
 

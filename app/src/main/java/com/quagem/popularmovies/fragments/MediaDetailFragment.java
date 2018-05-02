@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.quagem.popularmovies.MediaDetailActivity;
 import com.quagem.popularmovies.R;
-import com.quagem.popularmovies.TMDBNetworkTools;
+import com.quagem.popularmovies.NetworkTools;
 import com.quagem.popularmovies.UrlLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -88,8 +88,10 @@ public class MediaDetailFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (getActivity() != null) {
-            getActivity().getSupportLoaderManager().
-                    initLoader(ULR_LOADER_ID, null, this);
+
+            if (NetworkTools.isConnected(getActivity()))
+                getActivity().getSupportLoaderManager().
+                        initLoader(ULR_LOADER_ID, null, this);
         }
     }
 
@@ -103,7 +105,7 @@ public class MediaDetailFragment extends Fragment implements
         String mediaId = getActivity().getIntent().getStringExtra(MediaDetailActivity.ARG_MEDIA_ID);
         if (mediaId == null) errorLoadingData();
 
-        return new UrlLoader(getContext(), TMDBNetworkTools.getMediaDetailUrl(
+        return new UrlLoader(getContext(), NetworkTools.getMediaDetailUrl(
                 getResources().getString(R.string.TMDB_API_KEY), mediaId));
 
     }
@@ -120,9 +122,9 @@ public class MediaDetailFragment extends Fragment implements
                 final JSONArray genresList = results.getJSONArray(JSON_GENRES);
 
                 Picasso.with(getContext())
-                        .load(TMDBNetworkTools.getImageUri(
+                        .load(NetworkTools.getImageUri(
                                 results.getString(JSON_BACKDROP_PATH),
-                                TMDBNetworkTools.TMDB_IMAGE_W780))
+                                NetworkTools.TMDB_IMAGE_W780))
                         .error(R.drawable.ic_launcher_background) // TODO: 4/27/18
                         .into(backdrop, new Callback() {
                             @Override

@@ -1,6 +1,9 @@
 package com.quagem.popularmovies.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +23,7 @@ import com.quagem.popularmovies.MediaDataType;
 import com.quagem.popularmovies.MediaDetailActivity;
 import com.quagem.popularmovies.MediaGridAdaptor;
 import com.quagem.popularmovies.R;
-import com.quagem.popularmovies.TMDBNetworkTools;
+import com.quagem.popularmovies.NetworkTools;
 import com.quagem.popularmovies.UrlLoader;
 
 import org.json.JSONArray;
@@ -53,7 +56,8 @@ public class PopularMoviesFragment extends Fragment implements
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
 
         View rootView;
@@ -94,8 +98,9 @@ public class PopularMoviesFragment extends Fragment implements
             actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             if (actionBar != null) actionBar.setSubtitle(R.string.popular_movies);
 
-            getActivity().getSupportLoaderManager().
-                    initLoader(ULR_LOADER_ID, null, this);
+            if (NetworkTools.isConnected(getActivity()))
+                getActivity().getSupportLoaderManager().
+                        initLoader(ULR_LOADER_ID, null, this);
         }
     }
 
@@ -103,7 +108,7 @@ public class PopularMoviesFragment extends Fragment implements
     @Override
     @SuppressWarnings("ConstantConditions")
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new UrlLoader(getContext(), TMDBNetworkTools.getPopularListUrl(
+        return new UrlLoader(getContext(), NetworkTools.getPopularListUrl(
                 getResources().getString(R.string.TMDB_API_KEY)));
 
     }

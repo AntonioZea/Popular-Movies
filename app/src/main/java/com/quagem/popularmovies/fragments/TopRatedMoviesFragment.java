@@ -20,7 +20,7 @@ import com.quagem.popularmovies.MediaDataType;
 import com.quagem.popularmovies.MediaDetailActivity;
 import com.quagem.popularmovies.MediaGridAdaptor;
 import com.quagem.popularmovies.R;
-import com.quagem.popularmovies.TMDBNetworkTools;
+import com.quagem.popularmovies.NetworkTools;
 import com.quagem.popularmovies.UrlLoader;
 
 import org.json.JSONArray;
@@ -94,8 +94,9 @@ public class TopRatedMoviesFragment extends Fragment implements
             actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             if (actionBar != null) actionBar.setSubtitle(R.string.top_rated_movies);
 
-            getActivity().getSupportLoaderManager().
-                    initLoader(ULR_LOADER_ID, null, this);
+            if (NetworkTools.isConnected(getActivity()))
+                getActivity().getSupportLoaderManager().
+                        initLoader(ULR_LOADER_ID, null, this);
         }
     }
 
@@ -103,7 +104,7 @@ public class TopRatedMoviesFragment extends Fragment implements
     @Override
     @SuppressWarnings("ConstantConditions")
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new UrlLoader(getContext(), TMDBNetworkTools.getTopRatedListUrl(
+        return new UrlLoader(getContext(), NetworkTools.getTopRatedListUrl(
                 getResources().getString(R.string.TMDB_API_KEY)));
 
     }
