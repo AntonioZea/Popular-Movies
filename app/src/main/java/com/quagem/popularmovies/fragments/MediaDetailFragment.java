@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.quagem.popularmovies.MediaDetailActivity;
 import com.quagem.popularmovies.R;
 import com.quagem.popularmovies.TMDBNetworkTools;
 import com.quagem.popularmovies.UrlLoader;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -41,6 +43,8 @@ public class MediaDetailFragment extends Fragment implements
     private static final String JSON_VOTE_AVERAGE = "vote_average";
     private static final String JSON_VOTE_COUNT = "vote_count";
 
+    private View mainContainer;
+    private ProgressBar progressBar;
 
     private ImageView backdrop;
     private TextView title;
@@ -54,7 +58,6 @@ public class MediaDetailFragment extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
     }
 
     @Nullable
@@ -64,6 +67,11 @@ public class MediaDetailFragment extends Fragment implements
         Log.i(TAG, "onCreateView");
 
         View rootView = inflater.inflate(R.layout.movie_detail, container, false);
+
+        mainContainer = rootView.findViewById(R.id.container);
+        mainContainer.setVisibility(View.GONE);
+
+        progressBar = rootView.findViewById(R.id.progressbar);
 
         backdrop = rootView.findViewById(R.id.iv_backdrop);
         title = rootView.findViewById(R.id.tv_title);
@@ -79,9 +87,7 @@ public class MediaDetailFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("SIS", savedInstanceState == null ? "TRUE" : "False");
         if (getActivity() != null) {
-
             getActivity().getSupportLoaderManager().
                     initLoader(ULR_LOADER_ID, null, this);
         }
@@ -91,6 +97,8 @@ public class MediaDetailFragment extends Fragment implements
     @Override
     @SuppressWarnings("ConstantConditions")
     public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
+
+        progressBar.setVisibility(View.VISIBLE);
 
         String mediaId = getActivity().getIntent().getStringExtra(MediaDetailActivity.ARG_MEDIA_ID);
         if (mediaId == null) errorLoadingData();
@@ -115,9 +123,20 @@ public class MediaDetailFragment extends Fragment implements
                         .load(TMDBNetworkTools.getImageUri(
                                 results.getString(JSON_BACKDROP_PATH),
                                 TMDBNetworkTools.TMDB_IMAGE_W780))
-                        .placeholder(R.drawable.ic_launcher_background) // TODO: 4/27/18
                         .error(R.drawable.ic_launcher_background) // TODO: 4/27/18
-                        .into(backdrop);
+                        .into(backdrop, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                mainContainer.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                mainContainer.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
 
                 title.setText(results.getString(JSON_ORIGINAL_TITLE));
 

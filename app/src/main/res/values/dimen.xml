@@ -3,11 +3,9 @@
 
     <!--
     Backdrops aspect ratio 16:9 or 1,78:1
-    Poster images aspect ratio 1:1,5.
+    Poster images aspect ratio 1:1.5
     -->
     <dimen name="poster_list_width">135dp</dimen>
-    <dimen name="poster_list_height">270dp</dimen>
-
-    <dimen name="backdrop_height">200dp</dimen>
+    <dimen name="poster_list_height">202.5</dimen> <!-- Was 270 -->
 
 </resources>
