@@ -76,7 +76,6 @@ public class PopularMoviesFragment extends Fragment implements
 
                     Intent intent = new Intent(getContext(), MediaDetailActivity.class);
                     intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, Long.toString(id));
-
                     getContext().startActivity(intent);
                 }
             }

@@ -44,7 +44,7 @@ public class MediaGridAdaptor extends BaseAdapter {
 
         final ImageView imageView = view.findViewById(R.id.iv_movie_poster);
 
-        Picasso.with(activity)
+            Picasso.with(activity)
                 .load(NetworkTools.getImageUri(listData.get(i).getPosterPath(),
                         NetworkTools.TMDB_IMAGE_W185))
                 .placeholder(R.drawable.image_placeholder)

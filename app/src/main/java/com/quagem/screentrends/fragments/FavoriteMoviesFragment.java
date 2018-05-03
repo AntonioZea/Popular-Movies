@@ -67,7 +67,6 @@ public class FavoriteMoviesFragment extends Fragment implements
 
                     Intent intent = new Intent(getContext(), MediaDetailActivity.class);
                     intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, Long.toString(id));
-
                     getContext().startActivity(intent);
                 }
             }
@@ -101,10 +100,11 @@ public class FavoriteMoviesFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<List<MediaDataType>> loader,
                                List<MediaDataType> data) {
-        Log.i(TAG, "onLoadFinished: " + data);
+        Log.i(TAG, "onLoadFinished");
 
         if (data != null) {
-            listData = data;
+            listData.clear();
+            listData.addAll(data);
             mediaGridAdaptor.notifyDataSetChanged();
         }
     }

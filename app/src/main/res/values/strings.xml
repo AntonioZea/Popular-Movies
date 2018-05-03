@@ -2,16 +2,23 @@
 
     <string name="app_name">Screen Trends</string>
 
+    <!-- Menu -->
     <string name="popular_movies">Popular Movies</string>
     <string name="top_rated_movies">Top Rated Movies</string>
     <string name="your_favorites">Your Favorites</string>
+    <string name="add_to_favorites">Add to Favorites</string>
 
+    <!-- Labels -->
     <string name="media_details">Media Details</string>
     <string name="overview">Overview</string>
     <string name="based_on">Based on</string>
     <string name="critics">Critics</string>
 
-    <string name="error_loading_data">Error Loading Data</string>
+    <!-- Messages -->
+    <string name="error_loading_data">Error loading data</string>
+    <string name="error_saving_data">Error saving data</string>
+    <string name="saved_to_favorites">Media saved to favorites</string>
+    <string name="removed_from_favorites">Media removed from favorites</string>
 
     <!-- Content Descriptions -->
     <string name="media_poster">Media Poster</string>

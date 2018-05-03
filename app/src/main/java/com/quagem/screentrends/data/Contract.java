@@ -21,7 +21,7 @@ public class Contract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
 
         public static final String TABLE_NAME = "movies";
-        public static final String MEDIA_ID = "id";
-        public static final String TITLE = "name";
+        public static final String MOVIE_ID = "id";
+        public static final String POSTER_PATH = "posterPath";
     }
 }

@@ -1,5 +1,7 @@
 package com.quagem.screentrends.fragments;
 
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,12 +23,16 @@ import com.quagem.screentrends.MediaDetailActivity;
 import com.quagem.screentrends.R;
 import com.quagem.screentrends.NetworkTools;
 import com.quagem.screentrends.UrlLoader;
+import com.quagem.screentrends.data.Contract;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.quagem.screentrends.MediaDetailActivity.ARG_IS_FAVORITE;
+import static com.quagem.screentrends.MediaDetailActivity.ARG_MEDIA_ID;
 
 public class MediaDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<String> {
@@ -34,6 +42,7 @@ public class MediaDetailFragment extends Fragment implements
     private final static int ULR_LOADER_ID = 3;
 
     private static final String JSON_MOVIE_ID = "id";
+    private static final String JSON_POSTER_PATH = "poster_path";
     private static final String JSON_BACKDROP_PATH = "backdrop_path";
     private static final String JSON_ORIGINAL_TITLE = "original_title";
     private static final String JSON_GENRES = "genres";
@@ -43,8 +52,13 @@ public class MediaDetailFragment extends Fragment implements
     private static final String JSON_VOTE_AVERAGE = "vote_average";
     private static final String JSON_VOTE_COUNT = "vote_count";
 
+    private String movieId;
+    private String posterPath;
+
     private View mainContainer;
     private ProgressBar progressBar;
+
+    private boolean isFavorite;
 
     private ImageView backdrop;
     private TextView title;
@@ -57,7 +71,17 @@ public class MediaDetailFragment extends Fragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
+
         setRetainInstance(true);
+
+        if (getArguments() != null) {
+            movieId = getArguments().getString(ARG_MEDIA_ID);
+            isFavorite = getArguments().getBoolean(ARG_IS_FAVORITE);
+        } else errorLoadingData();
+
+        Log.i(TAG, "movieId: " + movieId);
+        Log.i(TAG, "isFavorite: " + isFavorite);
     }
 
     @Nullable
@@ -73,6 +97,16 @@ public class MediaDetailFragment extends Fragment implements
 
         progressBar = rootView.findViewById(R.id.progressbar);
 
+        CheckBox favoriteCheckBox = rootView.findViewById(R.id.cb_favorite);
+        favoriteCheckBox.setChecked(isFavorite);
+
+        favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                toggleFavorite(isChecked);
+            }
+        });
+
         backdrop = rootView.findViewById(R.id.iv_backdrop);
         title = rootView.findViewById(R.id.tv_title);
         genres = rootView.findViewById(R.id.tv_genres);
@@ -87,6 +121,7 @@ public class MediaDetailFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         if (getActivity() != null) {
 
             if (NetworkTools.isConnected(getActivity()))
@@ -102,11 +137,8 @@ public class MediaDetailFragment extends Fragment implements
 
         progressBar.setVisibility(View.VISIBLE);
 
-        String mediaId = getActivity().getIntent().getStringExtra(MediaDetailActivity.ARG_MEDIA_ID);
-        if (mediaId == null) errorLoadingData();
-
         return new UrlLoader(getContext(), NetworkTools.getMediaDetailUrl(
-                getResources().getString(R.string.TMDB_API_KEY), mediaId));
+                getResources().getString(R.string.TMDB_API_KEY), movieId));
 
     }
 
@@ -120,6 +152,8 @@ public class MediaDetailFragment extends Fragment implements
 
                 final JSONObject results = new JSONObject(data);
                 final JSONArray genresList = results.getJSONArray(JSON_GENRES);
+
+                posterPath = results.getString(JSON_POSTER_PATH);
 
                 Picasso.with(getContext())
                         .load(NetworkTools.getImageUri(
@@ -142,7 +176,6 @@ public class MediaDetailFragment extends Fragment implements
 
                 title.setText(results.getString(JSON_ORIGINAL_TITLE));
 
-                // Because the date uses a brite background it looks ugly when empty.
                 if (!results.getString(JSON_RELEASE_DATE).isEmpty()) {
                     releaseDate.setText(results.getString(JSON_RELEASE_DATE));
                     releaseDate.setVisibility(View.VISIBLE);
@@ -202,5 +235,55 @@ public class MediaDetailFragment extends Fragment implements
                 getResources().getString(R.string.error_loading_data), Toast.LENGTH_LONG).show();
 
         if (getActivity() != null) getActivity().finish();
+    }
+
+    private void toggleFavorite(boolean state) {
+        Log.i(TAG, "toggleFavorite: " + state);
+
+        isFavorite = state;
+
+        if (isFavorite) {
+            if (addedToFavorites()) showToast(R.string.saved_to_favorites);
+            else showToast(R.string.error_saving_data);
+        } else {
+            if (removedFromFavorites()) showToast(R.string.removed_from_favorites);
+            else showToast(R.string.error_saving_data);
+        }
+    }
+
+    private boolean addedToFavorites() {
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(Contract.Movies.MOVIE_ID, movieId);
+        cv.put(Contract.Movies.POSTER_PATH, posterPath);
+
+        Uri results = null;
+
+        if (getContext() != null) {
+            results = getContext().getContentResolver().insert(Contract.Movies.CONTENT_URI, cv);
+        }
+
+        return results != null;
+    }
+
+    private boolean removedFromFavorites() {
+
+        int results = 0;
+
+        if (getContext() != null) {
+
+            String where = Contract.Movies.MOVIE_ID + "=?";
+            String whereArgs[] = {movieId};
+
+            results = getContext().getContentResolver().delete(
+                    Contract.Movies.CONTENT_URI, where, whereArgs);
+        }
+
+        return results != 0;
+    }
+
+    private void showToast(int stringId) {
+        Toast.makeText(getContext(), stringId, Toast.LENGTH_LONG).show();
     }
 }
