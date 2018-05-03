@@ -1,4 +1,4 @@
-package com.quagem.popularmovies;
+package com.quagem.screentrends;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

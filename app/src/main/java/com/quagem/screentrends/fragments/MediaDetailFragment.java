@@ -1,4 +1,4 @@
-package com.quagem.popularmovies.fragments;
+package com.quagem.screentrends.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,10 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quagem.popularmovies.MediaDetailActivity;
-import com.quagem.popularmovies.R;
-import com.quagem.popularmovies.NetworkTools;
-import com.quagem.popularmovies.UrlLoader;
+import com.quagem.screentrends.MediaDetailActivity;
+import com.quagem.screentrends.R;
+import com.quagem.screentrends.NetworkTools;
+import com.quagem.screentrends.UrlLoader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

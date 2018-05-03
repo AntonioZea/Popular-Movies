@@ -1,4 +1,4 @@
-package com.quagem.popularmovies;
+package com.quagem.screentrends;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.quagem.popularmovies.fragments.MediaDetailFragment;
+import com.quagem.screentrends.fragments.MediaDetailFragment;
 
 public class MediaDetailActivity extends AppCompatActivity {
 

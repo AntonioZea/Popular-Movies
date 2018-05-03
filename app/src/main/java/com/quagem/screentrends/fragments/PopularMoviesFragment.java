@@ -1,9 +1,6 @@
-package com.quagem.popularmovies.fragments;
+package com.quagem.screentrends.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,12 +16,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.quagem.popularmovies.MediaDataType;
-import com.quagem.popularmovies.MediaDetailActivity;
-import com.quagem.popularmovies.MediaGridAdaptor;
-import com.quagem.popularmovies.R;
-import com.quagem.popularmovies.NetworkTools;
-import com.quagem.popularmovies.UrlLoader;
+import com.quagem.screentrends.MediaDataType;
+import com.quagem.screentrends.MediaDetailActivity;
+import com.quagem.screentrends.MediaGridAdaptor;
+import com.quagem.screentrends.R;
+import com.quagem.screentrends.NetworkTools;
+import com.quagem.screentrends.UrlLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;

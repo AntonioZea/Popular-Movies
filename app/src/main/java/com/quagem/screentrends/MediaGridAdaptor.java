@@ -1,4 +1,4 @@
-package com.quagem.popularmovies;
+package com.quagem.screentrends;
 
 import android.app.Activity;
 import android.view.View;

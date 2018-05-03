@@ -1,4 +1,4 @@
-package com.quagem.popularmovies;
+package com.quagem.screentrends;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.quagem.popularmovies;
+package com.quagem.screentrends;
 
 import java.util.ArrayList;
 import java.util.List;

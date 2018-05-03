@@ -1,4 +1,4 @@
-package com.quagem.popularmovies.fragments;
+package com.quagem.screentrends.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,30 +16,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.quagem.popularmovies.MediaDataType;
-import com.quagem.popularmovies.MediaDetailActivity;
-import com.quagem.popularmovies.MediaGridAdaptor;
-import com.quagem.popularmovies.R;
-import com.quagem.popularmovies.NetworkTools;
-import com.quagem.popularmovies.UrlLoader;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.quagem.screentrends.MediaCursorLoader;
+import com.quagem.screentrends.MediaDataType;
+import com.quagem.screentrends.MediaDetailActivity;
+import com.quagem.screentrends.MediaGridAdaptor;
+import com.quagem.screentrends.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopRatedMoviesFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<String> {
+public class FavoriteMoviesFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<List<MediaDataType>> {
 
-    public static final String TAG = TopRatedMoviesFragment.class.getSimpleName();
+    public static final String TAG = FavoriteMoviesFragment.class.getSimpleName();
 
-    private final static int ULR_LOADER_ID = 2;
-
-    private static final String JSON_RESULTS = "results";
-    private static final String JSON_MOVIE_ID = "id";
-    private static final String JSON_POSTER_PATH = "poster_path";
+    private final static int CURSOR_LOADER_ID = 4;
 
     private List<MediaDataType> listData;
     private MediaGridAdaptor mediaGridAdaptor;
@@ -53,7 +44,8 @@ public class TopRatedMoviesFragment extends Fragment implements
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
 
         View rootView;
@@ -92,61 +84,32 @@ public class TopRatedMoviesFragment extends Fragment implements
 
             ActionBar actionBar;
             actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            if (actionBar != null) actionBar.setSubtitle(R.string.top_rated_movies);
+            if (actionBar != null) actionBar.setSubtitle(R.string.your_favorites);
 
-            if (NetworkTools.isConnected(getActivity()))
-                getActivity().getSupportLoaderManager().
-                        initLoader(ULR_LOADER_ID, null, this);
+            getActivity().getSupportLoaderManager().
+                    initLoader(CURSOR_LOADER_ID, null, this);
         }
     }
 
     @NonNull
     @Override
     @SuppressWarnings("ConstantConditions")
-    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new UrlLoader(getContext(), NetworkTools.getTopRatedListUrl(
-                getResources().getString(R.string.TMDB_API_KEY)));
-
+    public Loader<List<MediaDataType>> onCreateLoader(int id, @Nullable Bundle args) {
+        return new MediaCursorLoader(getContext());
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+    public void onLoadFinished(@NonNull Loader<List<MediaDataType>> loader,
+                               List<MediaDataType> data) {
         Log.i(TAG, "onLoadFinished: " + data);
 
         if (data != null) {
-
-            listData.clear();
-
-            try {
-
-                final JSONObject results = new JSONObject(data);
-                final JSONArray movies = results.getJSONArray(JSON_RESULTS);
-
-                MediaDataType mediaDataType;
-
-                for (int i = 0; i < movies.length(); i++) {
-
-                    JSONObject movie = movies.getJSONObject(i);
-
-                    mediaDataType = new MediaDataType();
-
-                    mediaDataType.setId(movie.getLong(JSON_MOVIE_ID));
-                    mediaDataType.setPosterPath(movie.getString(JSON_POSTER_PATH));
-
-                    listData.add(mediaDataType);
-                }
-
-                mediaGridAdaptor.notifyDataSetChanged();
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            listData = data;
+            mediaGridAdaptor.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
-
+    public void onLoaderReset(@NonNull Loader<List<MediaDataType>> loader) {
     }
 }
-

@@ -1,4 +1,4 @@
-package com.quagem.popularmovies;
+package com.quagem.screentrends;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,8 +9,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.quagem.popularmovies.fragments.PopularMoviesFragment;
-import com.quagem.popularmovies.fragments.TopRatedMoviesFragment;
+import com.quagem.screentrends.fragments.FavoriteMoviesFragment;
+import com.quagem.screentrends.fragments.PopularMoviesFragment;
+import com.quagem.screentrends.fragments.TopRatedMoviesFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.action_sort_top_rated: fragment = new TopRatedMoviesFragment(); break;
-            case R.id.action_sort_favorites: // TODO: 4/30/2018
+            case R.id.action_sort_favorites: fragment = new FavoriteMoviesFragment(); break;
 
             default: fragment = new PopularMoviesFragment(); break;
         }
