@@ -22,6 +22,7 @@ public class Contract {
 
         public static final String TABLE_NAME = "movies";
         public static final String MOVIE_ID = "id";
+        public static final String TITLE = "ttle";
         public static final String POSTER_PATH = "posterPath";
     }
 }

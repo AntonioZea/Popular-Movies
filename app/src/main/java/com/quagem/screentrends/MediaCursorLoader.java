@@ -51,6 +51,9 @@ public class MediaCursorLoader  extends
                 mediaDataType.setId(cursor.getLong(cursor.getColumnIndex(
                         Contract.Movies.MOVIE_ID)));
 
+                mediaDataType.setTitle(cursor.getString(cursor.getColumnIndex(
+                        Contract.Movies.TITLE)));
+
                 mediaDataType.setPosterPath(cursor.getString(cursor.getColumnIndex(
                         Contract.Movies.POSTER_PATH)));
 

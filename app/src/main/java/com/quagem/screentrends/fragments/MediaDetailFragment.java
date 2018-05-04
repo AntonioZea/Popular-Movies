@@ -256,6 +256,7 @@ public class MediaDetailFragment extends Fragment implements
         ContentValues cv = new ContentValues();
 
         cv.put(Contract.Movies.MOVIE_ID, movieId);
+        cv.put(Contract.Movies.TITLE, title.getText().toString());
         cv.put(Contract.Movies.POSTER_PATH, posterPath);
 
         Uri results = null;

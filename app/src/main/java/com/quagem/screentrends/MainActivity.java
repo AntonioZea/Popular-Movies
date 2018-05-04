@@ -1,5 +1,6 @@
 package com.quagem.screentrends;
 
+import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.quagem.screentrends.data.Contract;
 import com.quagem.screentrends.fragments.FavoriteMoviesFragment;
 import com.quagem.screentrends.fragments.PopularMoviesFragment;
 import com.quagem.screentrends.fragments.TopRatedMoviesFragment;
@@ -55,6 +57,21 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.container, fragment).commit();
 
         return true;
+    }
+
+    public boolean isInFavorites(String mediaId) {
+
+        String where = Contract.Movies.MOVIE_ID + "=?";
+        String whereArgs[] = {mediaId};
+
+        Cursor cursor = getContentResolver().query(
+                Contract.Movies.CONTENT_URI, null, where,
+                whereArgs, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.close();
+            return true;
+        } else return false;
     }
 
 }

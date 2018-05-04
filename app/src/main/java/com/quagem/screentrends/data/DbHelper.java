@@ -27,6 +27,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 Contract.Movies.TABLE_NAME + " (" +
                 Contract.Movies._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 Contract.Movies.MOVIE_ID + " TEXT NOT NULL," +
+                Contract.Movies.TITLE + " TEXT NOT NULL," +
                 Contract.Movies.POSTER_PATH + " TEXT NOT NULL" +
                 ");";
 

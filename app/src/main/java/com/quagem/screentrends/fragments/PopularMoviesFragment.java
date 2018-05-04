@@ -1,6 +1,8 @@
 package com.quagem.screentrends.fragments;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,12 +18,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.quagem.screentrends.MainActivity;
 import com.quagem.screentrends.MediaDataType;
 import com.quagem.screentrends.MediaDetailActivity;
 import com.quagem.screentrends.MediaGridAdaptor;
 import com.quagem.screentrends.R;
 import com.quagem.screentrends.NetworkTools;
 import com.quagem.screentrends.UrlLoader;
+import com.quagem.screentrends.data.Contract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +57,7 @@ public class PopularMoviesFragment extends Fragment implements
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
 
@@ -72,11 +76,18 @@ public class PopularMoviesFragment extends Fragment implements
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                if (getContext() != null) {
+                if (getActivity() != null) {
+
+                    String mediaId = Long.toString(id);
+
+                    // check if favorite
+                    boolean isFavorite = ((MainActivity)getActivity()).isInFavorites(mediaId);
 
                     Intent intent = new Intent(getContext(), MediaDetailActivity.class);
-                    intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, Long.toString(id));
-                    getContext().startActivity(intent);
+                    intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, mediaId);
+                    intent.putExtra(MediaDetailActivity.ARG_IS_FAVORITE, isFavorite);
+
+                    getActivity().startActivity(intent);
                 }
             }
         });

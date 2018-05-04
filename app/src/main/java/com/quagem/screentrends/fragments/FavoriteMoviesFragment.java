@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.quagem.screentrends.MainActivity;
 import com.quagem.screentrends.MediaCursorLoader;
 import com.quagem.screentrends.MediaDataType;
 import com.quagem.screentrends.MediaDetailActivity;
@@ -63,11 +64,18 @@ public class FavoriteMoviesFragment extends Fragment implements
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                if (getContext() != null) {
+                if (getActivity() != null) {
+
+                    String mediaId = Long.toString(id);
+
+                    // check if favorite
+                    boolean isFavorite = ((MainActivity)getActivity()).isInFavorites(mediaId);
 
                     Intent intent = new Intent(getContext(), MediaDetailActivity.class);
-                    intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, Long.toString(id));
-                    getContext().startActivity(intent);
+                    intent.putExtra(MediaDetailActivity.ARG_MEDIA_ID, mediaId);
+                    intent.putExtra(MediaDetailActivity.ARG_IS_FAVORITE, isFavorite);
+
+                    getActivity().startActivity(intent);
                 }
             }
         });
