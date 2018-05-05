@@ -1,8 +1,6 @@
 package com.quagem.screentrends.fragments;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,17 +23,17 @@ import com.quagem.screentrends.MediaGridAdaptor;
 import com.quagem.screentrends.R;
 import com.quagem.screentrends.NetworkTools;
 import com.quagem.screentrends.UrlLoader;
-import com.quagem.screentrends.data.Contract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PopularMoviesFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<String> {
+        LoaderManager.LoaderCallbacks<List<String>> {
 
     public static final String TAG = PopularMoviesFragment.class.getSimpleName();
 
@@ -114,23 +112,28 @@ public class PopularMoviesFragment extends Fragment implements
     @NonNull
     @Override
     @SuppressWarnings("ConstantConditions")
-    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new UrlLoader(getContext(), NetworkTools.getPopularListUrl(
+    public Loader<List<String>> onCreateLoader(int id, @Nullable Bundle args) {
+
+        List<URL> urlList = new ArrayList<>();
+
+        urlList.add(NetworkTools.getPopularListUrl(
                 getResources().getString(R.string.TMDB_API_KEY)));
+
+        return new UrlLoader(getContext(), urlList);
 
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        Log.i(TAG, "onLoadFinished: " + data);
+    public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
+        Log.i(TAG, "onLoadFinished");
 
-        if (data != null) {
+        if (!data.get(0).isEmpty()) {
 
             listData.clear();
 
             try {
 
-                final JSONObject results = new JSONObject(data);
+                final JSONObject results = new JSONObject(data.get(0));
                 final JSONArray movies = results.getJSONArray(JSON_RESULTS);
 
                 MediaDataType mediaDataType;
@@ -156,7 +159,7 @@ public class PopularMoviesFragment extends Fragment implements
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<List<String>> loader) {
 
     }
 }

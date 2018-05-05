@@ -10,18 +10,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class UrlLoader extends AsyncTaskLoader<String> {
+public class UrlLoader extends AsyncTaskLoader<List<String>> {
 
     private static final String TAG = UrlLoader.class.getSimpleName();
 
-    private URL url;
-    private String results = "";
+    private List<URL> urlList;
+    private List<String> results = new ArrayList<>();
 
-    public UrlLoader(@NonNull Context context, URL url) {
+    public UrlLoader(@NonNull Context context, List<URL> urlList) {
         super(context);
-        this.url = url;
+        this.urlList = urlList;
     }
 
     @Override
@@ -34,24 +36,28 @@ public class UrlLoader extends AsyncTaskLoader<String> {
 
     @Nullable
     @Override
-    public String loadInBackground() {
+    public List<String> loadInBackground() {
         Log.i(TAG, "loadInBackground");
 
         HttpURLConnection connection;
 
         try {
 
-            connection = (HttpURLConnection) url.openConnection();
+            for (URL url : urlList) {
 
-            InputStream inputStream = connection.getInputStream();
+                connection = (HttpURLConnection) url.openConnection();
 
-            Scanner scanner = new Scanner(inputStream);
-            scanner.useDelimiter("\\A");
+                InputStream inputStream = connection.getInputStream();
 
-            boolean hasInput = scanner.hasNext();
+                Scanner scanner = new Scanner(inputStream);
+                scanner.useDelimiter("\\A");
 
-            if (hasInput) return results = scanner.next();
-            else return null;
+                if (scanner.hasNext()) results.add(scanner.next());
+                else results.add(""); // Add empty string to keep request order.
+
+            }
+
+            return results;
 
         } catch (IOException e) {
             e.printStackTrace();

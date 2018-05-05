@@ -28,11 +28,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TopRatedMoviesFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<String> {
+        LoaderManager.LoaderCallbacks<List<String>> {
 
     public static final String TAG = TopRatedMoviesFragment.class.getSimpleName();
 
@@ -110,23 +111,27 @@ public class TopRatedMoviesFragment extends Fragment implements
     @NonNull
     @Override
     @SuppressWarnings("ConstantConditions")
-    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
-        return new UrlLoader(getContext(), NetworkTools.getTopRatedListUrl(
+    public Loader<List<String>> onCreateLoader(int id, @Nullable Bundle args) {
+
+        List<URL> urlList = new ArrayList<>();
+
+        urlList.add(NetworkTools.getTopRatedListUrl(
                 getResources().getString(R.string.TMDB_API_KEY)));
 
+        return new UrlLoader(getContext(), urlList);
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
+    public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
         Log.i(TAG, "onLoadFinished: " + data);
 
-        if (data != null) {
+        if (!data.get(0).isEmpty()) {
 
             listData.clear();
 
             try {
 
-                final JSONObject results = new JSONObject(data);
+                final JSONObject results = new JSONObject(data.get(0));
                 final JSONArray movies = results.getJSONArray(JSON_RESULTS);
 
                 MediaDataType mediaDataType;
@@ -152,7 +157,7 @@ public class TopRatedMoviesFragment extends Fragment implements
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<List<String>> loader) {
 
     }
 }

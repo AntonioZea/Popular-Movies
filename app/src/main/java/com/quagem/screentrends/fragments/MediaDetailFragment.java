@@ -31,11 +31,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.quagem.screentrends.MediaDetailActivity.ARG_IS_FAVORITE;
 import static com.quagem.screentrends.MediaDetailActivity.ARG_MEDIA_ID;
 
 public class MediaDetailFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<String> {
+        LoaderManager.LoaderCallbacks<List<String>> {
 
     public static final String TAG = MediaDetailFragment.class.getSimpleName();
 
@@ -80,8 +84,6 @@ public class MediaDetailFragment extends Fragment implements
             isFavorite = getArguments().getBoolean(ARG_IS_FAVORITE);
         } else errorLoadingData();
 
-        Log.i(TAG, "movieId: " + movieId);
-        Log.i(TAG, "isFavorite: " + isFavorite);
     }
 
     @Nullable
@@ -133,24 +135,28 @@ public class MediaDetailFragment extends Fragment implements
     @NonNull
     @Override
     @SuppressWarnings("ConstantConditions")
-    public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<List<String>> onCreateLoader(int id, @Nullable Bundle args) {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        return new UrlLoader(getContext(), NetworkTools.getMediaDetailUrl(
+        List<URL> urlList = new ArrayList<>();
+
+        urlList.add(NetworkTools.getMediaDetailUrl(
                 getResources().getString(R.string.TMDB_API_KEY), movieId));
+
+        return new UrlLoader(getContext(), urlList);
 
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<String> loader, String data) {
-        Log.i(TAG, "onLoadFinished: " + data);
+    public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
+        Log.i(TAG, "onLoadFinished");
 
-        if (data != null) {
+        if (!data.get(0).isEmpty()) {
 
             try {
 
-                final JSONObject results = new JSONObject(data);
+                final JSONObject results = new JSONObject(data.get(0));
                 final JSONArray genresList = results.getJSONArray(JSON_GENRES);
 
                 posterPath = results.getString(JSON_POSTER_PATH);
@@ -225,7 +231,7 @@ public class MediaDetailFragment extends Fragment implements
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<String> loader) {
+    public void onLoaderReset(@NonNull Loader<List<String>> loader) {
 
     }
 
