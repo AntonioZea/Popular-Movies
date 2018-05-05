@@ -54,12 +54,12 @@ public class UrlLoader extends AsyncTaskLoader<List<String>> {
 
                 if (scanner.hasNext()) results.add(scanner.next());
                 else results.add(""); // Add empty string to keep request order.
-
             }
 
             return results;
 
         } catch (IOException e) {
+            // TODO: 5/5/2018 Notify user.
             e.printStackTrace();
         }
 

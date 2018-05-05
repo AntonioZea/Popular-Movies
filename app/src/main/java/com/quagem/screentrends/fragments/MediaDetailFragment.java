@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.quagem.screentrends.MediaDetailActivity;
 import com.quagem.screentrends.R;
 import com.quagem.screentrends.NetworkTools;
 import com.quagem.screentrends.UrlLoader;
@@ -92,7 +91,7 @@ public class MediaDetailFragment extends Fragment implements
                              @Nullable Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView");
 
-        View rootView = inflater.inflate(R.layout.movie_detail, container, false);
+        View rootView = inflater.inflate(R.layout.media_detail, container, false);
 
         mainContainer = rootView.findViewById(R.id.container);
         mainContainer.setVisibility(View.GONE);
@@ -141,7 +140,16 @@ public class MediaDetailFragment extends Fragment implements
 
         List<URL> urlList = new ArrayList<>();
 
+        // Media details.
         urlList.add(NetworkTools.getMediaDetailUrl(
+                getResources().getString(R.string.TMDB_API_KEY), movieId));
+
+        // Media trailers.
+        urlList.add(NetworkTools.getMediaTrailers(
+                getResources().getString(R.string.TMDB_API_KEY), movieId));
+
+        // Media reviews.
+        urlList.add(NetworkTools.getMediaReviews(
                 getResources().getString(R.string.TMDB_API_KEY), movieId));
 
         return new UrlLoader(getContext(), urlList);
@@ -151,6 +159,9 @@ public class MediaDetailFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
         Log.i(TAG, "onLoadFinished");
+
+        if (!data.get(1).isEmpty()) Log.i(TAG, "" + data.get(1));
+        if (!data.get(2).isEmpty()) Log.i(TAG, "" + data.get(2));
 
         if (!data.get(0).isEmpty()) {
 

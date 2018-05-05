@@ -11,7 +11,7 @@
     <!-- Labels -->
     <string name="media_details">Media Details</string>
     <string name="overview">Overview</string>
-    <string name="reviews">Reviews</string>
+    <string name="reviews">Latest Reviews</string>
     <string name="trailers">Trailers</string>
 
     <string name="based_on">Based on</string>
@@ -24,8 +24,9 @@
     <string name="removed_from_favorites">Media removed from favorites</string>
 
     <!-- Content Descriptions -->
-    <string name="media_poster">Media Poster</string>
-    <string name="backdrop_image">Backdrop Image</string>
+    <string name="media_poster">Media poster</string>
+    <string name="backdrop_image">Backdrop image</string>
+    <string name="media_trailer_button">Media trailer button</string>
 
 
 </resources>

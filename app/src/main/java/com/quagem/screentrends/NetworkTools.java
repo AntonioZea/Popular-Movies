@@ -35,6 +35,8 @@ public class NetworkTools {
             "http://api.themoviedb.org/3/movie/top_rated";
 
     private final static String TMDB_PARAM_API_KEY = "api_key";
+    private final static String TMDB_PARAM_API_REVIEWS = "reviews";
+    private final static String TMDB_PARAM_API_TRAILERS = "videos";
 
     private final static String TMDB_IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
 
@@ -81,6 +83,28 @@ public class NetworkTools {
         Uri uri = Uri.parse(TMDB_MEDIA_DETAIL_BASE_URL).buildUpon()
                 .appendPath(mediaId)
                 .appendQueryParameter(TMDB_PARAM_API_KEY, apiKey).build();
+
+        return buildUrl(uri);
+    }
+
+    public static URL getMediaTrailers(String apiKey, String mediaId) {
+
+        Uri uri = Uri.parse(TMDB_MEDIA_DETAIL_BASE_URL).buildUpon()
+                .appendPath(mediaId)
+                .appendPath(TMDB_PARAM_API_TRAILERS)
+                .appendQueryParameter(TMDB_PARAM_API_KEY, apiKey)
+                .build();
+
+        return buildUrl(uri);
+    }
+
+    public static URL getMediaReviews(String apiKey, String mediaId) {
+
+        Uri uri = Uri.parse(TMDB_MEDIA_DETAIL_BASE_URL).buildUpon()
+                .appendPath(mediaId)
+                .appendPath(TMDB_PARAM_API_REVIEWS)
+                .appendQueryParameter(TMDB_PARAM_API_KEY, apiKey)
+                .build();
 
         return buildUrl(uri);
     }
