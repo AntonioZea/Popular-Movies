@@ -11,6 +11,9 @@
     <!-- Labels -->
     <string name="media_details">Media Details</string>
     <string name="overview">Overview</string>
+    <string name="reviews">Reviews</string>
+    <string name="trailers">Trailers</string>
+
     <string name="based_on">Based on</string>
     <string name="critics">Critics</string>
 
