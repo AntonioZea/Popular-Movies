@@ -1,6 +1,7 @@
 package com.quagem.screentrends;
 
 import android.app.Activity;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,6 +19,7 @@ public class MediaGridAdaptor extends BaseAdapter {
     public MediaGridAdaptor(Activity activity, List<MediaDataType> listData) {
         this.activity = activity;
         this.listData = listData;
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     @Override

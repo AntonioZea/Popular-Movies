@@ -8,8 +8,11 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:gravity="center_vertical">
+    android:padding="8dp"
+    android:gravity="center_vertical"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground">
 
     <ImageView
         android:layout_width="32dp"
@@ -18,9 +21,12 @@
         android:contentDescription="@string/media_trailer_button" />
 
     <TextView
+        android:id="@+id/tv_trailer_name"
         style="@style/media_detail_trailer_name"
         android:singleLine="true"
         android:ellipsize="end"
+        android:paddingStart="4dp"
+        android:paddingEnd="0dp"
         tools:text="Best trailer ever! (Official) Best trailer ever! (Official)"/>
 
 </LinearLayout>

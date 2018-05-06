@@ -10,12 +10,12 @@
 
     <ScrollView
 
-        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
 
+            android:id="@+id/container"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -126,76 +126,17 @@
                 tools:text="Test test test test test test "/>
 
             <LinearLayout
-                android:id="@+id/reviews"
+                android:id="@+id/reviews_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAllCaps="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/reviews"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/media_reviews"/>
-            <include layout="@layout/media_reviews"/>
-            <include layout="@layout/media_reviews"/>
+                android:orientation="vertical"/>
 
             <LinearLayout
-                android:id="@+id/trailers"
+                android:id="@+id/trailers_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp">
+                android:orientation="vertical"/>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAllCaps="true"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/trailers"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/darker_gray"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/media_trailers"/>
-            <include layout="@layout/media_trailers"/>
-            <include layout="@layout/media_trailers"/>
 
         </LinearLayout>
 

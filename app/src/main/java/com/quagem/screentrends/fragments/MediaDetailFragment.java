@@ -1,6 +1,10 @@
 package com.quagem.screentrends.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,8 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +44,7 @@ import java.util.List;
 import static com.quagem.screentrends.MediaDetailActivity.ARG_IS_FAVORITE;
 import static com.quagem.screentrends.MediaDetailActivity.ARG_MEDIA_ID;
 
+@SuppressLint("InflateParams")
 public class MediaDetailFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<String>> {
 
@@ -44,21 +52,26 @@ public class MediaDetailFragment extends Fragment implements
 
     private final static int ULR_LOADER_ID = 3;
 
-    private static final String JSON_MOVIE_ID = "id";
+    private static final String JSON_KEY = "key";
     private static final String JSON_POSTER_PATH = "poster_path";
     private static final String JSON_BACKDROP_PATH = "backdrop_path";
     private static final String JSON_ORIGINAL_TITLE = "original_title";
     private static final String JSON_GENRES = "genres";
-    private static final String JSON_GENRES_NAME = "name";
+    private static final String JSON_NAME = "name";
     private static final String JSON_OVERVIEW = "overview";
     private static final String JSON_RELEASE_DATE = "release_date";
     private static final String JSON_VOTE_AVERAGE = "vote_average";
     private static final String JSON_VOTE_COUNT = "vote_count";
+    private static final String JSON_RESULTS = "results";
+    private static final String JSON_AUTHOR = "author";
+    private static final String JSON_CONTENT = "content";
 
     private String movieId;
     private String posterPath;
 
-    private View mainContainer;
+    private LinearLayout reviewsContainer;
+    private LinearLayout trailersContainer;
+    private LinearLayout mainContainer;
     private ProgressBar progressBar;
 
     private boolean isFavorite;
@@ -95,6 +108,9 @@ public class MediaDetailFragment extends Fragment implements
 
         mainContainer = rootView.findViewById(R.id.container);
         mainContainer.setVisibility(View.GONE);
+
+        reviewsContainer = rootView.findViewById(R.id.reviews_container);
+        trailersContainer = rootView.findViewById(R.id.trailers_container);
 
         progressBar = rootView.findViewById(R.id.progressbar);
 
@@ -158,10 +174,6 @@ public class MediaDetailFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
-        Log.i(TAG, "onLoadFinished");
-
-        if (!data.get(1).isEmpty()) Log.i(TAG, "" + data.get(1));
-        if (!data.get(2).isEmpty()) Log.i(TAG, "" + data.get(2));
 
         if (!data.get(0).isEmpty()) {
 
@@ -192,11 +204,7 @@ public class MediaDetailFragment extends Fragment implements
                         });
 
                 title.setText(results.getString(JSON_ORIGINAL_TITLE));
-
-                if (!results.getString(JSON_RELEASE_DATE).isEmpty()) {
-                    releaseDate.setText(results.getString(JSON_RELEASE_DATE));
-                    releaseDate.setVisibility(View.VISIBLE);
-                }
+                releaseDate.setText(results.getString(JSON_RELEASE_DATE));
 
                 StringBuilder stringBuilder = new StringBuilder();
 
@@ -208,7 +216,7 @@ public class MediaDetailFragment extends Fragment implements
                         if (genresList.length() > 0 && i > 0) stringBuilder.append(", ");
 
                         stringBuilder.append(
-                                genresList.getJSONObject(i).getString(JSON_GENRES_NAME));
+                                genresList.getJSONObject(i).getString(JSON_NAME));
                     }
                     stringBuilder.append(".");
                     genres.setText(stringBuilder);
@@ -232,8 +240,113 @@ public class MediaDetailFragment extends Fragment implements
                     basedOn.setVisibility(View.VISIBLE);
                 }
 
-
                 overview.setText(results.getString(JSON_OVERVIEW));
+
+                addReviews(data.get(2));
+                addTrailers(data.get(1));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void addReviews(String json) {
+
+        if (reviewsContainer.getChildCount() > 0) reviewsContainer.removeAllViews();
+
+        if (!json.isEmpty()) {
+
+            TextView author;
+            TextView content;
+
+            LayoutInflater inflater = getLayoutInflater();
+
+            inflater.inflate(R.layout.reviews_header, reviewsContainer);
+
+            try {
+
+                final JSONObject results = new JSONObject(json);
+                final JSONArray reviewList = results.getJSONArray(JSON_RESULTS);
+
+                for (int i = 0; i < reviewList.length(); i++) {
+
+                    View rootView = inflater.inflate(R.layout.media_reviews, null);
+
+                    author = rootView.findViewById(R.id.tv_review_author);
+                    content = rootView.findViewById(R.id.tv_review_content);
+
+                    author.setText(reviewList.getJSONObject(i).getString(JSON_AUTHOR));
+                    content.setText(reviewList.getJSONObject(i).getString(JSON_CONTENT));
+
+                    reviewsContainer.addView(rootView);
+                }
+
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void addTrailers(String json) {
+
+        if (trailersContainer.getChildCount() > 0) trailersContainer.removeAllViews();
+
+        if (!json.isEmpty()) {
+
+            TextView name;
+
+            LayoutInflater inflater = getLayoutInflater();
+
+            inflater.inflate(R.layout.trailers_header, trailersContainer);
+
+            try {
+
+                final JSONObject results = new JSONObject(json);
+                final JSONArray reviewList = results.getJSONArray(JSON_RESULTS);
+
+                for (int i = 0; i < reviewList.length(); i++) {
+
+                    View rootView = inflater.inflate(R.layout.media_trailers, null);
+
+                    name = rootView.findViewById(R.id.tv_trailer_name);
+
+                    name.setText(reviewList.getJSONObject(i).getString(JSON_NAME));
+
+                    final String videoId = reviewList.getJSONObject(i).getString(JSON_KEY);
+
+                    rootView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            if (getContext() != null) {
+
+                                Intent intent;
+                                String youTubeUri = "http://www.youtube.com/watch?v=" + videoId;
+
+                                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youTubeUri));
+
+                                intent.setComponent(
+                                        new ComponentName("com.google.android.youtube",
+                                                "com.google.android.youtube.PlayerActivity"));
+
+                                try {
+                                    getContext().startActivity(intent);
+                                } catch (ActivityNotFoundException ex) {
+
+                                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(youTubeUri));
+                                    getContext().startActivity(intent);
+                                }
+                            }
+                        }
+                    });
+
+                    trailersContainer.addView(rootView);
+                }
+
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
